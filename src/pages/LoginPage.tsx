@@ -85,7 +85,7 @@ export function LoginPage() {
           normalizedEmail,
           {
             redirectTo:
-  'https://zaiofficial96.github.io/z-ai-algeria-jobs-v1/login',
+  'https://zaiofficial96.github.io/z-ai-algeria-jobs-v1/reset-password',
           }
         );
 
