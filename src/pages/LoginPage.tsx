@@ -85,7 +85,7 @@ export function LoginPage() {
           normalizedEmail,
           {
             redirectTo:
-              'https://z-ai-algeria-jobs-pl-vtb4.bolt.host/login',
+  'https://zaiofficial96.github.io/z-ai-algeria-jobs-v1/login',
           }
         );
 
