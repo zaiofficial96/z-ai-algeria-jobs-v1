@@ -95,14 +95,18 @@ export function AdminPage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-xl border border-ink-200 bg-white p-6 shadow-sm">
-            <h2 className="font-semibold text-ink-900">
-              Jobs
-            </h2>
-            <p className="mt-2 text-sm text-ink-500">
-              Manage job listings.
-            </p>
-          </div>
+        <button
+  type="button"
+  onClick={() => navigate('/admin/jobs')}
+  className="rounded-xl border border-ink-200 bg-white p-6 text-left shadow-sm transition hover:border-primary-300 hover:shadow-md"
+>
+  <h2 className="font-semibold text-ink-900">
+    Jobs
+  </h2>
+  <p className="mt-2 text-sm text-ink-500">
+    Manage job listings.
+  </p>
+</button>
 
           <div className="rounded-xl border border-ink-200 bg-white p-6 shadow-sm">
             <h2 className="font-semibold text-ink-900">
