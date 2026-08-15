@@ -16,6 +16,7 @@ import { ContactPage } from '@/pages/ContactPage';
 import { TrustPage } from '@/pages/TrustPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
+import { ResetPasswordPage } from '@/pages/ResetPasswordPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { AdminPage } from '@/pages/AdminPage';
 
