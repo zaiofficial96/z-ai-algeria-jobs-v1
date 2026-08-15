@@ -41,7 +41,7 @@ export function AdminPage() {
       }
     }
 
-    checkAdminAccess();
+    checkAdminAccess(); 
 
     return () => {
       mounted = false;
