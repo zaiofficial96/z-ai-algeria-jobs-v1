@@ -69,7 +69,13 @@ export function AdminJobsPage() {
           </div>
 
           <div className="flex gap-3">
-            <button
+              <button
+  type="button"
+  onClick={() => navigate('/admin/jobs/new')}
+  className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+>
+  + Add Job
+</button>
               type="button"
               onClick={() => navigate('/admin')}
               className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-700 hover:bg-ink-50"
