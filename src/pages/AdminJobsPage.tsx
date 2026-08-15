@@ -68,7 +68,7 @@ export function AdminJobsPage() {
             </p>
           </div>
 
-  <div className="flex gap-3">
+<div className="flex gap-3">
   <button
     type="button"
     onClick={() => navigate('/admin/jobs/new')}
@@ -83,32 +83,16 @@ export function AdminJobsPage() {
     className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-700 hover:bg-ink-50"
   >
     Back to Dashboard
+  </button>
+
   <button
     type="button"
-    onClick={() => loadJobs()}
+    onClick={loadJobs}
     className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
   >
     Refresh
   </button>
 </div>
-</button>
-              type="button"
-              onClick={() => navigate('/admin')}
-              className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-700 hover:bg-ink-50"
-            >
-              Back to Dashboard
-            </button>
-
-            <button
-              type="button"
-              onClick={() => loadJobs()}
-              className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
-            >
-              Refresh
-            </button>
-          </div>
-        </div>
-
         <div className="rounded-xl border border-ink-200 bg-white shadow-sm">
           <div className="border-b border-ink-200 px-6 py-4">
             <h2 className="font-semibold text-ink-900">
