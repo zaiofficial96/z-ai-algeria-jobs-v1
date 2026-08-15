@@ -17,6 +17,7 @@ import { TrustPage } from '@/pages/TrustPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
+import { AdminPage } from '@/pages/AdminPage';
 
 const router = createBrowserRouter(
   [
@@ -45,10 +46,12 @@ const router = createBrowserRouter(
         { path: 'contact', element: <ContactPage /> },
         { path: 'trust', element: <TrustPage /> },
 
-        { path: 'login', element: <LoginPage /> },
-        { path: 'register', element: <RegisterPage /> },
+       { path: 'login', element: <LoginPage /> },
+{ path: 'register', element: <RegisterPage /> },
 
-        { path: '*', element: <NotFoundPage /> },
+{ path: 'admin', element: <AdminPage /> },
+
+{ path: '*', element: <NotFoundPage /> },
       ],
     },
   ],
