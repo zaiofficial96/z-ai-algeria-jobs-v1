@@ -1,167 +1,57 @@
-import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useI18n } from '@/i18n';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { Logo } from '@/components/Logo';
-import { Mail, Lock } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import { cn } from '@/utils/cn';
 
-export function LoginPage() {
-  const { t } = useI18n();
-  const navigate = useNavigate();
+type Variant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    setError('');
-    setIsLoading(true);
-
-    const { data, error: signInError } =
-      await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
-
-    if (signInError) {
-      setError(signInError.message);
-      setIsLoading(false);
-      return;
-    }
-
-    if (!data.user) {
-      setError('Login failed. Please try again.');
-      setIsLoading(false);
-      return;
-    }
-
-    const { data: adminUser, error: adminError } = await supabase
-      .from('admin_users')
-      .select('user_id')
-      .eq('user_id', data.user.id)
-      .maybeSingle();
-
-    if (adminError) {
-      console.error('Admin check error:', adminError);
-      setError('Unable to verify administrator access.');
-      await supabase.auth.signOut();
-      setIsLoading(false);
-      return;
-    }
-
-    if (!adminUser) {
-      setError('You do not have administrator access.');
-      await supabase.auth.signOut();
-      setIsLoading(false);
-      return;
-    }
-
-    navigate('/admin');
-  };
-
-  return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="flex justify-center mb-6">
-          <Logo size="lg" showSuffix={false} />
-        </div>
-
-        <h1 className="text-2xl font-bold text-ink-900 text-center mb-1">
-          {t('auth.signIn')}
-        </h1>
-
-        <p className="text-center text-ink-500 mb-6 text-sm">
-          {t('auth.signInPrompt')}
-        </p>
-
-        {error && (
-          <div className="rounded-xl border border-danger-200 bg-danger-50 p-3 mb-5">
-            <p className="text-sm text-danger-800 text-center">
-              {error}
-            </p>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label={t('auth.email')}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon={<Mail className="h-5 w-5" />}
-            disabled={isLoading}
-            required
-          />
-
-          <Input
-            label={t('auth.password')}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            icon={<Lock className="h-5 w-5" />}
-            disabled={isLoading}
-            required
-          />
-
-          <div className="text-end">
-            <button
-              type="button"
-              className="text-sm text-primary-600 hover:text-primary-700"
-              onClick={async () => {
-                if (!email.trim()) {
-                  setError('Enter your email address first.');
-                  return;
-                }
-
-                setError('');
-
-                const { error: resetError } =
-                  await supabase.auth.resetPasswordForEmail(
-                    email.trim(),
-                    {
-                      redirectTo:
-                        'https://z-ai-algeria-jobs-pl-vtb4.bolt.host/login',
-                    }
-                  );
-
-                if (resetError) {
-                  setError(resetError.message);
-                  return;
-                }
-
-                setError('Password reset email sent. Check your inbox.');
-              }}
-              disabled={isLoading}
-            >
-              {t('auth.forgotPassword')}
-            </button>
-          </div>
-
-          <Button
-            type="submit"
-            variant="primary"
-            fullWidth
-            isLoading={isLoading}
-          >
-            {t('auth.signInCta')}
-          </Button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-ink-500">
-          {t('auth.noAccount')}{' '}
-          <Link
-            to="/register"
-            className="font-medium text-primary-600 hover:text-primary-700"
-          >
-            {t('auth.createAccount')}
-          </Link>
-        </p>
-      </div>
-    </div>
-  );
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: Variant;
+  size?: Size;
+  fullWidth?: boolean;
+  isLoading?: boolean;
 }
+
+const variantClasses: Record<Variant, string> = {
+  primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-sm',
+  secondary: 'bg-white text-ink-800 border border-ink-200 hover:bg-ink-50 hover:border-ink-300 active:bg-ink-100',
+  tertiary: 'text-primary-700 hover:bg-primary-50 active:bg-primary-100',
+  danger: 'bg-danger-600 text-white hover:bg-danger-700 active:bg-danger-800 shadow-sm',
+  ghost: 'text-ink-600 hover:bg-ink-100 active:bg-ink-200',
+};
+
+const sizeClasses: Record<Size, string> = {
+  sm: 'h-9 px-3.5 text-sm gap-1.5',
+  md: 'h-11 px-5 text-sm gap-2',
+  lg: 'h-12 px-6 text-base gap-2',
+};
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant = 'primary', size = 'md', fullWidth, isLoading, className, children, disabled, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        disabled={disabled || isLoading}
+        className={cn(
+          'inline-flex items-center justify-center rounded-lg font-medium transition-colors duration-150',
+          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
+          variantClasses[variant],
+          sizeClasses[size],
+          fullWidth && 'w-full',
+          className
+        )}
+        {...props}
+      >
+        {isLoading && (
+          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12s2.627 8 8 8 8-2.627 8-8h-4z" />
+          </svg>
+        )}
+        {children}
+      </button>
+    );
+  }
+);
+
+Button.displayName = 'Button';
