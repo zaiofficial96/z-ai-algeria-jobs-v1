@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { Input } from '@/components/ui/Input';
@@ -13,13 +13,48 @@ export function ResetPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (!mounted) return;
+
+      if (event === 'PASSWORD_RECOVERY') {
+        setIsReady(true);
+      }
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
+
+      if (session) {
+        setIsReady(true);
+      } else {
+        setError('رابط إعادة تعيين كلمة المرور غير صالح أو منتهي الصلاحية.');
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setError('');
     setSuccess('');
+
+    if (!isReady) {
+      setError('افتح رابط إعادة تعيين كلمة المرور من بريدك الإلكتروني أولًا.');
+      return;
+    }
 
     if (password.length < 8) {
       setError('كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل.');
@@ -43,7 +78,9 @@ export function ResetPasswordPage() {
         return;
       }
 
-      setSuccess('تم تغيير كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول.');
+      setSuccess('تم تغيير كلمة المرور بنجاح.');
+
+      await supabase.auth.signOut();
 
       setTimeout(() => {
         navigate('/login', { replace: true });
@@ -94,7 +131,7 @@ export function ResetPasswordPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             icon={<Lock className="h-5 w-5" />}
-            disabled={isLoading}
+            disabled={isLoading || !isReady}
             required
             minLength={8}
           />
@@ -105,7 +142,7 @@ export function ResetPasswordPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             icon={<Lock className="h-5 w-5" />}
-            disabled={isLoading}
+            disabled={isLoading || !isReady}
             required
             minLength={8}
           />
@@ -115,6 +152,7 @@ export function ResetPasswordPage() {
             variant="primary"
             fullWidth
             isLoading={isLoading}
+            disabled={!isReady}
           >
             تغيير كلمة المرور
           </Button>
@@ -122,4 +160,4 @@ export function ResetPasswordPage() {
       </div>
     </div>
   );
-  }
+}
