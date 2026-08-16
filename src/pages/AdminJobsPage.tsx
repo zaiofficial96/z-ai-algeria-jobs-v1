@@ -192,5 +192,6 @@ export function AdminJobsPage() {
         </div>
       </div>
     </div>
+   </div>
   );
 }
