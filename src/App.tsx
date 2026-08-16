@@ -1,4 +1,9 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
 
 import { Layout } from '@/components/layout/Layout';
 
@@ -31,6 +36,91 @@ import { AdminJobsPage } from '@/pages/AdminJobsPage';
 import { AdminNewJobPage } from '@/pages/AdminNewJobPage';
 
 import { NotFoundPage } from '@/pages/NotFoundPage';
+
+import { supabase } from '@/lib/supabase';
+
+function AdminRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [checking, setChecking] = useState(true);
+  const [authorized, setAuthorized] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function checkAdminAccess() {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          if (mounted) {
+            setAuthorized(false);
+            setChecking(false);
+          }
+          return;
+        }
+
+        const { data: adminUser, error } = await supabase
+          .from('admin_users')
+          .select('user_id')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error || !adminUser) {
+          if (mounted) {
+            setAuthorized(false);
+            setChecking(false);
+          }
+          return;
+        }
+
+        if (mounted) {
+          setAuthorized(true);
+          setChecking(false);
+        }
+      } catch (error) {
+        console.error('Admin authorization error:', error);
+
+        if (mounted) {
+          setAuthorized(false);
+          setChecking(false);
+        }
+      }
+    }
+
+    checkAdminAccess();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (checking) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
+        <div className="text-center">
+          <p className="text-sm font-medium text-primary-600">
+            Z AI Algeria Jobs
+          </p>
+
+          <p className="mt-2 text-sm text-ink-500">
+            Checking administrator access...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authorized) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+}
 
 const router = createBrowserRouter(
   [
@@ -125,17 +215,29 @@ const router = createBrowserRouter(
 
         {
           path: 'admin',
-          element: <AdminPage />,
+          element: (
+            <AdminRoute>
+              <AdminPage />
+            </AdminRoute>
+          ),
         },
 
         {
           path: 'admin/jobs',
-          element: <AdminJobsPage />,
+          element: (
+            <AdminRoute>
+              <AdminJobsPage />
+            </AdminRoute>
+          ),
         },
 
         {
           path: 'admin/jobs/new',
-          element: <AdminNewJobPage />,
+          element: (
+            <AdminRoute>
+              <AdminNewJobPage />
+            </AdminRoute>
+          ),
         },
 
         {
@@ -152,4 +254,4 @@ const router = createBrowserRouter(
 
 export default function App() {
   return <RouterProvider router={router} />;
-          }
+  }
