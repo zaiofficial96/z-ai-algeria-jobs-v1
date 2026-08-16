@@ -687,4 +687,139 @@ export function AdminNewJobPage() {
               </select>
 
               {/* Verification status */}
-             
+              <div>
+                <label className="mb-2 block text-sm font-medium text-ink-700">
+                  Verification Status
+                </label>
+
+                <select
+                  value={form.verification_status}
+                  onChange={(e) =>
+                    updateField(
+                      'verification_status',
+                      e.target.value
+                    )
+                  }
+                  className="w-full rounded-lg border border-ink-200 bg-white px-3 py-2.5 outline-none focus:border-primary-500"
+                >
+                  <option value="unverified">
+                    Unverified
+                  </option>
+
+                  <option value="recentlyChecked">
+                    Recently checked
+                  </option>
+
+                  <option value="sourceConfirmed">
+                    Source confirmed
+                  </option>
+
+                  <option value="verified">
+                    Verified
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Publication */}
+          <div className="rounded-xl border border-ink-200 bg-white p-6 shadow-sm">
+            <h2 className="mb-5 text-lg font-semibold text-ink-900">
+              Publication
+            </h2>
+
+            <div className="grid gap-5 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-ink-700">
+                  Published At
+                </label>
+
+                <input
+                  type="datetime-local"
+                  value={form.published_at}
+                  onChange={(e) =>
+                    updateField(
+                      'published_at',
+                      e.target.value
+                    )
+                  }
+                  className="w-full rounded-lg border border-ink-200 px-3 py-2.5 outline-none focus:border-primary-500"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-ink-700">
+                  Expires At
+                </label>
+
+                <input
+                  type="datetime-local"
+                  value={form.expires_at}
+                  onChange={(e) =>
+                    updateField(
+                      'expires_at',
+                      e.target.value
+                    )
+                  }
+                  className="w-full rounded-lg border border-ink-200 px-3 py-2.5 outline-none focus:border-primary-500"
+                />
+              </div>
+            </div>
+
+            <div className="mt-5 flex items-center gap-3">
+              <input
+                id="is_active"
+                type="checkbox"
+                checked={form.is_active}
+                onChange={(e) =>
+                  updateField(
+                    'is_active',
+                    e.target.checked
+                  )
+                }
+                className="h-4 w-4 rounded border-ink-300 text-primary-600 focus:ring-primary-500"
+              />
+
+              <label
+                htmlFor="is_active"
+                className="text-sm font-medium text-ink-700"
+              >
+                Active job listing
+              </label>
+            </div>
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                navigate('/admin/jobs')
+              }
+              className="rounded-lg border border-ink-200 bg-white px-5 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              disabled={saving}
+              className="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+            >
+              {saving
+                ? 'Saving...'
+                : 'Publish Job'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+                      } 
