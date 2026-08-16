@@ -68,31 +68,33 @@ export function AdminJobsPage() {
             </p>
           </div>
 
-<div className="flex gap-3">
-  <button
-    type="button"
-    onClick={() => navigate('/admin/jobs/new')}
-    className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
-  >
-    + Add Job
-  </button>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => navigate('/admin/jobs/new')}
+              className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            >
+              + Add Job
+            </button>
 
-  <button
-    type="button"
-    onClick={() => navigate('/admin')}
-    className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-700 hover:bg-ink-50"
-  >
-    Back to Dashboard
-  </button>
+            <button
+              type="button"
+              onClick={() => navigate('/admin')}
+              className="rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-700 hover:bg-ink-50"
+            >
+              Back to Dashboard
+            </button>
 
-  <button
-    type="button"
-    onClick={loadJobs}
-    className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
-  >
-    Refresh
-  </button>
-</div>
+            <button
+              type="button"
+              onClick={loadJobs}
+              className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            >
+              Refresh
+            </button>
+          </div>
+        </div>
+
         <div className="rounded-xl border border-ink-200 bg-white shadow-sm">
           <div className="border-b border-ink-200 px-6 py-4">
             <h2 className="font-semibold text-ink-900">
@@ -149,7 +151,10 @@ export function AdminJobsPage() {
 
                 <tbody className="divide-y divide-ink-200 bg-white">
                   {jobs.map((job) => (
-                    <tr key={job.id} className="hover:bg-ink-50">
+                    <tr
+                      key={job.id}
+                      className="hover:bg-ink-50"
+                    >
                       <td className="px-6 py-4">
                         <div className="font-medium text-ink-900">
                           {job.title_ar}
@@ -192,6 +197,5 @@ export function AdminJobsPage() {
         </div>
       </div>
     </div>
-   </div>
   );
 }
