@@ -651,7 +651,8 @@ export function AdminNewJobPage() {
                 <option value="communitySource">
                   Community source
                 </option>
-              </select
+              </select>
+                              <select
                   value={form.verification_status}
                   onChange={(e) =>
                     updateField(
@@ -779,4 +780,4 @@ export function AdminNewJobPage() {
       </div>
     </div>
   );
-                      }
+}
