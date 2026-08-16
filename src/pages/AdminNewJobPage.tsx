@@ -779,4 +779,4 @@ export function AdminNewJobPage() {
       </div>
     </div>
   );
-              }
+}
