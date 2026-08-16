@@ -20,7 +20,7 @@ import { ResetPasswordPage } from '@/pages/ResetPasswordPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { AdminPage } from '@/pages/AdminPage';
 import { AdminJobsPage } from '@/pages/AdminJobsPage';
-
+import { AdminNewJobPage } from '@/pages/AdminNewJobPage';
 const router = createBrowserRouter(
   [
     {
@@ -31,7 +31,7 @@ const router = createBrowserRouter(
 
         { path: 'jobs', element: <JobsPage /> },
         { path: 'jobs/:id', element: <JobDetailPage /> },
-
+{ path: 'admin/jobs/new', element: <AdminNewJobPage /> },
         { path: 'companies', element: <CompaniesPage /> },
         { path: 'companies/:id', element: <CompanyDetailPage /> },
 
