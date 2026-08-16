@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 
 type JobRow = {
@@ -153,16 +153,21 @@ export function AdminJobsPage() {
                   {jobs.map((job) => (
                     <tr
                       key={job.id}
-                      className="hover:bg-ink-50"
+                      className="transition-colors hover:bg-ink-50"
                     >
                       <td className="px-6 py-4">
-                        <div className="font-medium text-ink-900">
-                          {job.title_ar}
-                        </div>
+                        <Link
+                          to={`/jobs/${job.slug}`}
+                          className="group block"
+                        >
+                          <div className="font-medium text-ink-900 group-hover:text-primary-600">
+                            {job.title_ar}
+                          </div>
 
-                        <div className="mt-1 text-xs text-ink-400">
-                          {job.slug}
-                        </div>
+                          <div className="mt-1 text-xs text-ink-400 group-hover:text-primary-500">
+                            {job.slug}
+                          </div>
+                        </Link>
                       </td>
 
                       <td className="px-6 py-4 text-sm text-ink-700">
