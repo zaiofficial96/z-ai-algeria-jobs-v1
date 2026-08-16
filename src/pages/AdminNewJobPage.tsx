@@ -95,13 +95,11 @@ export function AdminNewJobPage() {
         company_name:
           form.company_name.trim() || null,
 
-        // Store Wilaya code, not Wilaya name.
         wilaya: form.wilaya,
 
         city:
           form.city.trim() || null,
 
-        // Store category slug.
         category: form.category,
 
         contract_type:
@@ -391,25 +389,40 @@ export function AdminNewJobPage() {
                   }
                   className="w-full rounded-lg border border-ink-200 bg-white px-3 py-2.5 outline-none focus:border-primary-500"
                 >
-                  <option value="CDI">CDI</option>
-                  <option value="CDD">CDD</option>
+                  <option value="CDI">
+                    CDI
+                  </option>
+
+                  <option value="CDD">
+                    CDD
+                  </option>
+
                   <option value="Freelance">
                     Freelance
                   </option>
+
                   <option value="Internship">
                     Internship
                   </option>
+
                   <option value="Temporary">
                     Temporary
                   </option>
+
                   <option value="PartTime">
                     Part Time
                   </option>
+
                   <option value="FullTime">
                     Full Time
                   </option>
+
                   <option value="Apprenticeship">
                     Apprenticeship
+                  </option>
+
+                  <option value="Remote">
+                    Remote
                   </option>
                 </select>
               </div>
@@ -433,24 +446,31 @@ export function AdminNewJobPage() {
                   <option value="none">
                     No experience
                   </option>
+
                   <option value="internship">
                     Internship
                   </option>
+
                   <option value="entry">
                     Entry level
                   </option>
+
                   <option value="1to2">
                     1-2 years
                   </option>
+
                   <option value="3to5">
                     3-5 years
                   </option>
+
                   <option value="5plus">
                     5+ years
                   </option>
+
                   <option value="senior">
                     Senior
                   </option>
+
                   <option value="manager">
                     Manager
                   </option>
@@ -476,9 +496,11 @@ export function AdminNewJobPage() {
                   <option value="onsite">
                     On-site
                   </option>
+
                   <option value="hybrid">
                     Hybrid
                   </option>
+
                   <option value="remote">
                     Remote
                   </option>
@@ -581,9 +603,17 @@ export function AdminNewJobPage() {
                 }
                 className="rounded-lg border border-ink-200 bg-white px-3 py-2.5 outline-none focus:border-primary-500"
               >
-                <option value="DZD">DZD</option>
-                <option value="EUR">EUR</option>
-                <option value="USD">USD</option>
+                <option value="DZD">
+                  DZD
+                </option>
+
+                <option value="EUR">
+                  EUR
+                </option>
+
+                <option value="USD">
+                  USD
+                </option>
               </select>
 
             </div>
@@ -597,6 +627,7 @@ export function AdminNewJobPage() {
 
             <div className="grid gap-5 md:grid-cols-2">
 
+              {/* Source name */}
               <input
                 value={form.source_name}
                 onChange={(e) =>
@@ -609,6 +640,7 @@ export function AdminNewJobPage() {
                 placeholder="Source name"
               />
 
+              {/* Source URL */}
               <input
                 type="url"
                 value={form.source_url}
@@ -622,6 +654,7 @@ export function AdminNewJobPage() {
                 placeholder="https://..."
               />
 
+              {/* Source type */}
               <select
                 value={form.source_type}
                 onChange={(e) =>
@@ -651,132 +684,7 @@ export function AdminNewJobPage() {
                 <option value="communitySource">
                   Community source
                 </option>
-              </select>                <select
-                  value={form.verification_status}
-                  onChange={(e) =>
-                    updateField(
-                      'verification_status',
-                      e.target.value
-                    )
-                  }
-                  className="w-full rounded-lg border border-ink-200 bg-white px-3 py-2.5 outline-none focus:border-primary-500"
-                >
-                  <option value="unverified">
-                    Unverified
-                  </option>
+              </select>
 
-                  <option value="recentlyChecked">
-                    Recently checked
-                  </option>
-
-                  <option value="sourceConfirmed">
-                    Source confirmed
-                  </option>
-
-                  <option value="verified">
-                    Verified
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Publication */}
-          <div className="rounded-xl border border-ink-200 bg-white p-6 shadow-sm">
-            <h2 className="mb-5 text-lg font-semibold text-ink-900">
-              Publication
-            </h2>
-
-            <div className="grid gap-5 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-ink-700">
-                  Published At
-                </label>
-
-                <input
-                  type="datetime-local"
-                  value={form.published_at}
-                  onChange={(e) =>
-                    updateField(
-                      'published_at',
-                      e.target.value
-                    )
-                  }
-                  className="w-full rounded-lg border border-ink-200 px-3 py-2.5 outline-none focus:border-primary-500"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-ink-700">
-                  Expires At
-                </label>
-
-                <input
-                  type="datetime-local"
-                  value={form.expires_at}
-                  onChange={(e) =>
-                    updateField(
-                      'expires_at',
-                      e.target.value
-                    )
-                  }
-                  className="w-full rounded-lg border border-ink-200 px-3 py-2.5 outline-none focus:border-primary-500"
-                />
-              </div>
-            </div>
-
-            <div className="mt-5 flex items-center gap-3">
-              <input
-                id="is_active"
-                type="checkbox"
-                checked={form.is_active}
-                onChange={(e) =>
-                  updateField(
-                    'is_active',
-                    e.target.checked
-                  )
-                }
-                className="h-4 w-4 rounded border-ink-300 text-primary-600 focus:ring-primary-500"
-              />
-
-              <label
-                htmlFor="is_active"
-                className="text-sm font-medium text-ink-700"
-              >
-                Active job listing
-              </label>
-            </div>
-          </div>
-
-          {error && (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-              {error}
-            </div>
-          )}
-
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() =>
-                navigate('/admin/jobs')
-              }
-              className="rounded-lg border border-ink-200 bg-white px-5 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={saving}
-              className="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
-            >
-              {saving
-                ? 'Saving...'
-                : 'Publish Job'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
+              {/* Verification status */}
+             
