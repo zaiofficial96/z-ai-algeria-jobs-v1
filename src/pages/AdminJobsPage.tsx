@@ -46,6 +46,31 @@ export function AdminJobsPage() {
     setLoading(false);
   }
 
+  async function deleteJob(job: JobRow) {
+    const confirmed = window.confirm(
+      `هل أنت متأكد من حذف الوظيفة "${job.title_ar}"؟`
+    );
+
+    if (!confirmed) return;
+
+    setError('');
+
+    const { error } = await supabase
+      .from('jobs')
+      .delete()
+      .eq('id', job.id);
+
+    if (error) {
+      console.error('Delete job error:', error);
+      setError(`فشل حذف الوظيفة: ${error.message}`);
+      return;
+    }
+
+    setJobs((currentJobs) =>
+      currentJobs.filter((currentJob) => currentJob.id !== job.id)
+    );
+  }
+
   useEffect(() => {
     loadJobs();
   }, []);
@@ -146,6 +171,10 @@ export function AdminJobsPage() {
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-500">
                       Status
                     </th>
+
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ink-500">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
 
@@ -192,6 +221,16 @@ export function AdminJobsPage() {
                         >
                           {job.is_active ? 'Active' : 'Inactive'}
                         </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <button
+                          type="button"
+                          onClick={() => deleteJob(job)}
+                          className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-100"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
