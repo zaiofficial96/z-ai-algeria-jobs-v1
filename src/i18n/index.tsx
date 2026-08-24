@@ -349,7 +349,7 @@ const translations = {
     'footer.trust': 'مركز الثقة',
     'footer.jobAlerts': 'تنبيهات الوظائف',
     'footer.disclaimer': 'Z AI الجزائر للوظائف — منصة توظيف مدعومة بالذكاء الاصطناعي للجزائر.',
-    'footer.foundedBy': 'تأسست على يد عبد الرؤوف خلاضي',
+    'footer.foundedBy': 'تأسست على يد عبد الرؤوف خلادي',
     'footer.rights': 'جميع الحقوق محفوظة.',
 
     // Common
