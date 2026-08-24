@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://zaiofficial96.github.io/z-ai-algeria-jobs-v1/sitemap.xml

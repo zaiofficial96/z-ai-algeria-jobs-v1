@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { ShieldCheck, Search, FileText, Sparkles, MapPin, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 export function AboutPage() {
-  const { t } = useI18n(); 
+  const { t } = useI18n();
 
   const sections = [
     { icon: Search, title: t('about.what'), desc: t('about.whatDesc') },

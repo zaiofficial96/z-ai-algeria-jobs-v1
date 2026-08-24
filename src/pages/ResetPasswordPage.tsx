@@ -1,97 +1,35 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
+import { useI18n } from '@/i18n';
 import { supabase } from '@/lib/supabase';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Logo } from '@/components/Logo';
-import { Lock } from 'lucide-react';
+import { Mail, ArrowLeft } from 'lucide-react';
 
 export function ResetPasswordPage() {
-  const navigate = useNavigate();
-
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const { t } = useI18n();
+  const [email, setEmail] = useState('');
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [isReady, setIsReady] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    let mounted = true;
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
-      if (!mounted) return;
-
-      if (event === 'PASSWORD_RECOVERY') {
-        setIsReady(true);
-      }
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return;
-
-      if (session) {
-        setIsReady(true);
-      } else {
-        setError('رابط إعادة تعيين كلمة المرور غير صالح أو منتهي الصلاحية.');
-      }
-    });
-
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     setError('');
-    setSuccess('');
-
-    if (!isReady) {
-      setError('افتح رابط إعادة تعيين كلمة المرور من بريدك الإلكتروني أولًا.');
-      return;
-    }
-
-    if (password.length < 8) {
-      setError('كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('كلمتا المرور غير متطابقتين.');
-      return;
-    }
-
-    setIsLoading(true);
-
+    setSending(true);
     try {
-      const { error: updateError } = await supabase.auth.updateUser({
-        password,
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
       });
-
-      if (updateError) {
-        setError(updateError.message);
-        return;
-      }
-
-      setSuccess('تم تغيير كلمة المرور بنجاح.');
-
-      await supabase.auth.signOut();
-
-      setTimeout(() => {
-        navigate('/login', { replace: true });
-      }, 1500);
+      if (resetError) throw resetError;
+      setSent(true);
     } catch (err) {
-      console.error('Password update error:', err);
-      setError('حدث خطأ أثناء تغيير كلمة المرور.');
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
-      setIsLoading(false);
+      setSending(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
@@ -99,64 +37,41 @@ export function ResetPasswordPage() {
         <div className="flex justify-center mb-6">
           <Logo size="lg" showSuffix={false} />
         </div>
+        <h1 className="text-2xl font-bold text-ink-900 text-center mb-1">{t('auth.forgotPassword')}</h1>
+        <p className="text-center text-ink-500 mb-6 text-sm">{t('auth.signInPrompt')}</p>
 
-        <h1 className="text-2xl font-bold text-ink-900 text-center mb-2">
-          إعادة تعيين كلمة المرور
-        </h1>
+        {sent ? (
+          <div className="rounded-xl border border-success-200 bg-success-50 p-4 text-center">
+            <p className="text-sm text-success-800 font-medium">{t('contact.sent')}</p>
+            <p className="text-xs text-success-700 mt-1">{t('contact.sentDesc')}</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="rounded-xl border border-danger-200 bg-danger-50 p-3">
+                <p className="text-sm text-danger-700 text-center">{error}</p>
+              </div>
+            )}
+            <Input
+              label={t('auth.email')}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              icon={<Mail className="h-5 w-5" />}
+              required
+            />
+            <Button type="submit" variant="primary" fullWidth isLoading={sending}>
+              {t('auth.forgotPassword')}
+            </Button>
+          </form>
+        )}
 
-        <p className="text-center text-ink-500 mb-6 text-sm">
-          أدخل كلمة المرور الجديدة لحسابك.
+        <p className="mt-6 text-center">
+          <Link to="/login" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700">
+            <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
+            {t('auth.signInCta')}
+          </Link>
         </p>
-
-        {error && (
-          <div className="rounded-xl border border-danger-200 bg-danger-50 p-3 mb-5">
-            <p className="text-sm text-danger-800 text-center">
-              {error}
-            </p>
-          </div>
-        )}
-
-        {success && (
-          <div className="rounded-xl border border-success-200 bg-success-50 p-3 mb-5">
-            <p className="text-sm text-success-800 text-center">
-              {success}
-            </p>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="كلمة المرور الجديدة"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            icon={<Lock className="h-5 w-5" />}
-            disabled={isLoading || !isReady}
-            required
-            minLength={8}
-          />
-
-          <Input
-            label="تأكيد كلمة المرور"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            icon={<Lock className="h-5 w-5" />}
-            disabled={isLoading || !isReady}
-            required
-            minLength={8}
-          />
-
-          <Button
-            type="submit"
-            variant="primary"
-            fullWidth
-            isLoading={isLoading}
-            disabled={!isReady}
-          >
-            تغيير كلمة المرور
-          </Button>
-        </form>
       </div>
     </div>
   );
